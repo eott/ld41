@@ -1,29 +1,24 @@
 // Game and meta globals
 var can = document.getElementById("screen"); // The canvas element
 var ctx = can.getContext("2d"); // The 2D draw context
+
 var sp3 = 0.86602540378 // Number is sin(PI/3)
-
 var a = 20
-var b = 2 * a * sp3 * 0.7
-var c = a * (1 - sp3)
+var b = 0.8 * a * Math.sin(2 * 3.1415926 / 3)
+var c = Math.sqrt(a * a - b * b)
 
-var Hex = function(x, y, size) {
+var Hex = function(x, y) {
     this.x = x
     this.y = y
-    this.size = size
     this.value = 127
 
-    var b = sp3 * size
-    var a = Math.sqrt(size * size - b * b)
-    b = b * 0.7
-
     this.nodes = [
-        [x - a, y - b],
-        [x + a, y - b],
-        [x + size, y],
-        [x + a, y + b],
-        [x - a, y + b],
-        [x - size, y]
+        [x + 0.5 * a + c, y],
+        [x + c, y - b],
+        [x - c, y - b],
+        [x - 0.5 * a - c, y],
+        [x - c, y + b],
+        [x + c, y + b]
     ]
 }
 
@@ -50,14 +45,16 @@ function gameLoop() {
     hexes = []
     ctx.clearRect(0, 0, can.width, can.height)
 
-    for (var i = 0; i < 20; i++) {
-        for (var k = 0; k < 40; k++) {
-            if (k % 2 == 0) {
-                var offset = size
+    for (var i = 0; i < 25; i++) {
+        for (var k = 0; k < 20; k++) {
+            if (i % 2 == 0) {
+                var x_offset = a + c
+                var y_offset = b + c
             } else {
-                var offset = size * 2.5
+                var x_offset = a + c
+                var y_offset = 2 * b + c
             }
-            hexes.push(new Hex(offset + i * 3 * size, size + 0.7 * k * sp3 * size, size))
+            hexes.push(new Hex(x_offset + i * (a + 1.3 * c), y_offset + k * 2 * b))
         }
     }
 
