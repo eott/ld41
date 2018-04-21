@@ -136,6 +136,8 @@ GameApp.prototype.init = function() {
         }
     }
 
+    this.input = new Input()
+
     this.isInitialized = true
 }
 
