@@ -30,4 +30,25 @@ GUI.prototype.draw = function(ctx) {
         ctx.lineTo(50 + x, 520)
         ctx.stroke()
     }
+
+    // draw sync meter
+    ctx.fillStyle = "#222222"
+    ctx.fillRect(50, 535, 600, 50)
+    ctx.fillStyle = "#dd00dd"
+    ctx.fillRect(52, 537, 596 * game.human.sync, 46)
+
+    // draw balance meter
+    ctx.fillStyle = "#222222"
+    ctx.fillRect(665, 535, 285, 50)
+    var grad = ctx.createLinearGradient(667, 537, 948, 537)
+    grad.addColorStop(0, "#00ff00")
+    grad.addColorStop(1, "#ff0000")
+    ctx.fillStyle = grad
+    ctx.fillRect(667, 537, 281, 46)
+    ctx.strokeStyle = "#000000"
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.moveTo(667 + 281 * game.balance, 537)
+    ctx.lineTo(667 + 281 * game.balance, 587)
+    ctx.stroke()
 }

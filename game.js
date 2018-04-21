@@ -89,11 +89,14 @@ Hex.prototype.postUpdate = function() {
 var Player = function(humanPlayer, i, k) {
     this.i = i
     this.k = k
+
     this.img = new Image()
     this.img.scale = 0.5
     this.img.width = 48
     this.img.height = 110
     this.img.src = humanPlayer ? "player_human.png" : "player_ai.png"
+
+    this.sync = 0.25
 }
 
 Player.prototype.draw = function(ctx) {
@@ -114,6 +117,7 @@ var GameApp = function(can, ctx) {
     this.hexes = []
     this.human = new Player(true, 0, 1)
     this.ai = new Player(false, 23, 14)
+    this.balance = 0
 }
 
 GameApp.prototype.centerOfHex = function(i, k) {
@@ -138,7 +142,9 @@ GameApp.prototype.init = function() {
 
     this.input = new Input()
     this.gui = new GUI()
+
     this.beatTimerStart = (new Date()).getTime()
+    this.balance = 0
 
     this.isInitialized = true
 }
@@ -151,17 +157,23 @@ GameApp.prototype.gameLoop = function() {
         ? this.beatOverdue
         : 1000 - this.beatOverdue
 
-    if (!game.isInitialized) {
-        game.init()
+    if (!this.isInitialized) {
+        this.init()
     }
 
-    for (idx in game.hexes) {
-        game.hexes[idx].preUpdate()
+    for (idx in this.hexes) {
+        this.hexes[idx].preUpdate()
     }
 
-    for (idx in game.hexes) {
-        game.hexes[idx].postUpdate()
-        game.hexes[idx].draw(this.ctx)
+    this.balance = 0
+    for (idx in this.hexes) {
+        this.balance += this.hexes[idx].corruption
+    }
+    this.balance = this.balance / 384 / 255 // 384 = nr of hexes
+
+    for (idx in this.hexes) {
+        this.hexes[idx].postUpdate()
+        this.hexes[idx].draw(this.ctx)
     }
 
     this.gui.draw(ctx)
