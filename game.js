@@ -86,23 +86,53 @@ Hex.prototype.postUpdate = function() {
     }
 }
 
+var Player = function(humanPlayer, i, k) {
+    this.i = i
+    this.k = k
+    this.img = new Image()
+    this.img.scale = 0.5
+    this.img.width = 48
+    this.img.height = 110
+    this.img.src = humanPlayer ? "player_human.png" : "player_ai.png"
+}
+
+Player.prototype.draw = function(ctx) {
+    coords = game.centerOfHex(this.i, this.k)
+    ctx.drawImage(
+        this.img,
+        coords[0] - 0.5 * this.img.width * this.img.scale,
+        coords[1] - this.img.height * this.img.scale,
+        this.img.width * this.img.scale,
+        this.img.height * this.img.scale
+    )
+}
+
 var GameApp = function(can, ctx) {
+    this.can = can
+    this.ctx = ctx
     this.isInitialized = false
     this.hexes = []
+    this.human = new Player(true, 0, 1)
+    this.ai = new Player(false, 23, 14)
+}
+
+GameApp.prototype.centerOfHex = function(i, k) {
+    if (i % 2 == 0) {
+        var x_offset = a + c
+        var y_offset = b + c
+    } else {
+        var x_offset = a + c
+        var y_offset = 2 * b + c
+    }
+    // @TODO figure out why 1.3 is necessary and what's the precise number
+    return [x_offset + i * (a + 1.3 * c), y_offset + k * 2 * b]
 }
 
 GameApp.prototype.init = function() {
     for (var k = 0; k < 16; k++) {
         for (var i = 0; i < 24; i++) {
-            if (i % 2 == 0) {
-                var x_offset = a + c
-                var y_offset = b + c
-            } else {
-                var x_offset = a + c
-                var y_offset = 2 * b + c
-            }
-            // @TODO figure out why 1.3 is necessary and what's the precise number
-            this.hexes.push(new Hex(i, k, x_offset + i * (a + 1.3 * c), y_offset + k * 2 * b))
+            var coords = this.centerOfHex(i, k)
+            this.hexes.push(new Hex(i, k, coords[0], coords[1]))
         }
     }
 
@@ -110,7 +140,7 @@ GameApp.prototype.init = function() {
 }
 
 GameApp.prototype.gameLoop = function() {
-    ctx.clearRect(0, 0, can.width, can.height)
+    this.ctx.clearRect(0, 0, can.width, can.height)
 
     if (!game.isInitialized) {
         game.init()
@@ -122,8 +152,11 @@ GameApp.prototype.gameLoop = function() {
 
     for (idx in game.hexes) {
         game.hexes[idx].postUpdate()
-        game.hexes[idx].draw(ctx)
+        game.hexes[idx].draw(this.ctx)
     }
+
+    this.human.draw(this.ctx)
+    this.ai.draw(this.ctx)
 }
 
 var can = document.getElementById("screen"); // The canvas element
@@ -134,5 +167,5 @@ var a = 20
 var b = 0.8 * a * Math.sin(2 * 3.1415926 / 3)
 var c = Math.sqrt(a * a - b * b)
 
-var game = new GameApp()
+var game = new GameApp(can, ctx)
 window.setInterval('game.gameLoop()', 40);
