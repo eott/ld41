@@ -137,12 +137,19 @@ GameApp.prototype.init = function() {
     }
 
     this.input = new Input()
+    this.gui = new GUI()
+    this.beatTimerStart = (new Date()).getTime()
 
     this.isInitialized = true
 }
 
 GameApp.prototype.gameLoop = function() {
     this.ctx.clearRect(0, 0, can.width, can.height)
+
+    this.beatOverdue = (new Date().getTime() - this.beatTimerStart) % 1000
+    this.beatProximity = this.beatOverdue < 500
+        ? this.beatOverdue
+        : 1000 - this.beatOverdue
 
     if (!game.isInitialized) {
         game.init()
@@ -156,6 +163,8 @@ GameApp.prototype.gameLoop = function() {
         game.hexes[idx].postUpdate()
         game.hexes[idx].draw(this.ctx)
     }
+
+    this.gui.draw(ctx)
 
     this.human.draw(this.ctx)
     this.ai.draw(this.ctx)
