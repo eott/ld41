@@ -36,6 +36,11 @@ GUI.prototype.draw = function(ctx) {
     ctx.fillRect(50, 535, 600, 50)
     ctx.fillStyle = "#dd00dd"
     ctx.fillRect(52, 537, 596 * game.human.sync, 46)
+    ctx.strokeStyle = "#ffffff"
+    ctx.beginPath()
+    ctx.moveTo(50 + 600 * game.scene.buildingCost, 537)
+    ctx.lineTo(50 + 600 * game.scene.buildingCost, 583)
+    ctx.stroke()
 
     // draw balance meter
     ctx.fillStyle = "#222222"

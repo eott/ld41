@@ -13,6 +13,8 @@ var Hex = function(i, k, x, y) {
         [x + c, y + b]
     ]
 
+    // building types: 0 = no building, 1 = human start, 2 = ai start, 3 = human tower
+    // 4 = ai tower
     if ((i == 0 && k <= 1) || (i == 1 && k == 0)) {
         this.corruption = 0
         this.buildingType = 1
@@ -83,5 +85,19 @@ Hex.prototype.preUpdate = function() {
 Hex.prototype.postUpdate = function() {
     if (this.buildingType == 0) {
         this.corruption = this.newCorruption
+    } else if (this.buildingType == 1) {
+        this.corruption = 0
+    } else if (this.buildingType == 2) {
+        this.corruption = 255
+    } else if (this.buildingType == 3) {
+        this.corruption = Math.max(0, Math.min(255, this.corruption - 0.1))
+    } else if (this.buildingType == 4) {
+        this.corruption = Math.max(0, Math.min(255, this.corruption + 0.1))
     }
+}
+
+var Scene = function() {
+    this.buildingCost = 0.8
+    this.corruptionBreak1 = 80
+    this.corruptionBreak2 = 174
 }

@@ -40,6 +40,7 @@ GameApp.prototype.init = function() {
     this.input = new Input()
     this.gui = new GUI()
     this.sfx = new SFX()
+    this.scene = new Scene()
 
     this.isInitialized = true
 }
