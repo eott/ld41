@@ -41,6 +41,7 @@ GameApp.prototype.init = function() {
     this.scene = new Scene()
 
     this.projectiles = []
+    this.highlightedTiles = []
 
     this.isInitialized = true
 }
@@ -63,6 +64,15 @@ GameApp.prototype.onBeat = function() {
             || this.hexes[idx].buildingType == this.scene.getBuildingType("ai_thrower")
         ) {
             this.hexes[idx].throwProjectile()
+        }
+    }
+}
+
+GameApp.prototype.onOffBeat = function() {
+    this.highlightedTiles = []
+    for (idx in this.hexes) {
+        if (Math.random() < 0.2) {
+            this.highlightedTiles.push(this.hexes[idx])
         }
     }
 }
@@ -97,7 +107,17 @@ GameApp.prototype.gameLoop = function() {
         this.onBeat()
     }
 
+    if (oldOverdue < this.beatMillis * 0.5 && this.beatOverdue > this.beatMillis * 0.5) {
+        this.onOffBeat()
+    }
+
     this.gui.update()
+
+    var factor = this.beatProximity / this.beatMillis
+    factor = factor > 0.15 ? 0.0 : 4 - factor / 0.15
+    for (idx in this.highlightedTiles) {
+        this.highlightedTiles[idx].yOffset = -factor
+    }
 
     for (idx in this.hexes) {
         this.hexes[idx].preUpdate()

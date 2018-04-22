@@ -3,6 +3,7 @@ var Hex = function(i, k, x, y) {
     this.k = k
     this.x = x
     this.y = y
+    this.yOffset = 0
 
     this.faction = 0
 
@@ -128,12 +129,12 @@ Hex.prototype.draw = function(ctx) {
     ctx.fillStyle = this.fillColor()
     ctx.strokeStyle = this.strokeColor()
     ctx.beginPath()
-    ctx.moveTo(this.nodes[0][0], this.nodes[0][1])
-    ctx.lineTo(this.nodes[1][0], this.nodes[1][1])
-    ctx.lineTo(this.nodes[2][0], this.nodes[2][1])
-    ctx.lineTo(this.nodes[3][0], this.nodes[3][1])
-    ctx.lineTo(this.nodes[4][0], this.nodes[4][1])
-    ctx.lineTo(this.nodes[5][0], this.nodes[5][1])
+    ctx.moveTo(this.nodes[0][0], this.nodes[0][1] + this.yOffset)
+    ctx.lineTo(this.nodes[1][0], this.nodes[1][1] + this.yOffset)
+    ctx.lineTo(this.nodes[2][0], this.nodes[2][1] + this.yOffset)
+    ctx.lineTo(this.nodes[3][0], this.nodes[3][1] + this.yOffset)
+    ctx.lineTo(this.nodes[4][0], this.nodes[4][1] + this.yOffset)
+    ctx.lineTo(this.nodes[5][0], this.nodes[5][1] + this.yOffset)
     ctx.closePath()
     ctx.fill()
     ctx.stroke()
@@ -142,7 +143,7 @@ Hex.prototype.draw = function(ctx) {
         ctx.drawImage(
             this.img,
             this.x - 0.5 * this.img.width * this.img.scale,
-            this.y + b - this.img.height * this.img.scale,
+            this.y + this.yOffset + b - this.img.height * this.img.scale,
             this.img.width * this.img.scale,
             this.img.height * this.img.scale
         )
