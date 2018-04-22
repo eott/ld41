@@ -40,7 +40,7 @@ Player.prototype.update = function() {
             this.i = newXPos
             this.k = newYPos
 
-            if (game.beatProximity < 100) {
+            if (game.beatProximity < game.beatSlack) {
                 this.sync += 0.05
             } else {
                 this.sync -= 0.1

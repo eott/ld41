@@ -3,7 +3,7 @@ var GUI = function() {
 }
 
 GUI.prototype.draw = function(ctx) {
-    var fac = 1.0 - game.beatProximity * 0.002
+    var fac = 1.0 - game.beatProximity * 2 / game.beatMillis
     // eighth power gives us a nice pulse
     fac = fac * fac
     fac = fac * fac
@@ -23,7 +23,7 @@ GUI.prototype.draw = function(ctx) {
     ctx.lineTo(950, 500)
     ctx.stroke()
     for (var i = 0; i < 4; i++) {
-        var x = (900 / 4) * (i - game.beatOverdue * 0.001)
+        var x = (900 / 4) * (i - game.beatOverdue / game.beatMillis)
         x = x < 0 ? 900 + x : x
         ctx.beginPath()
         ctx.moveTo(50 + x, 480)

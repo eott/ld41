@@ -32,18 +32,23 @@ GameApp.prototype.init = function() {
     this.gui = new GUI()
 
     this.beatTimerStart = (new Date()).getTime()
-    this.balance = 0
+    this.beatOverdue = 0
+    this.beatProximity = 0
+    this.beatsPerMinute = 80
+    this.beatMillis = 60000 / this.beatsPerMinute
+    this.beatSlack = 100
 
+    this.balance = 0
     this.isInitialized = true
 }
 
 GameApp.prototype.gameLoop = function() {
     this.ctx.clearRect(0, 0, can.width, can.height)
 
-    this.beatOverdue = (new Date().getTime() - this.beatTimerStart) % 1000
-    this.beatProximity = this.beatOverdue < 500
+    this.beatOverdue = (new Date().getTime() - this.beatTimerStart) % this.beatMillis
+    this.beatProximity = this.beatOverdue < this.beatMillis * 0.5
         ? this.beatOverdue
-        : 1000 - this.beatOverdue
+        : this.beatMillis - this.beatOverdue
 
     if (!this.isInitialized) {
         this.init()
