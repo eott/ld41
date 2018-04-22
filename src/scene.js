@@ -164,7 +164,11 @@ Hex.prototype.strokeColor = function() {
 }
 
 Hex.prototype.preUpdate = function() {
-    if (this.buildingType == 0) {
+    if (
+        this.buildingType == 0
+        || this.buildingType == 7
+        || this.buildingType == 8
+    ) {
         difference = 0
         for (idx in this.neighbors) {
             var i = this.neighbors[idx][0]
@@ -177,20 +181,30 @@ Hex.prototype.preUpdate = function() {
 }
 
 Hex.prototype.postUpdate = function() {
-    if (this.buildingType == 0) {
-        this.corruption = this.newCorruption
-    } else if (this.buildingType == 1) {
-        this.corruption = Math.max(0, Math.min(255, this.corruption - 0.3))
-    } else if (this.buildingType == 2) {
-        this.corruption = Math.max(0, Math.min(255, this.corruption + 0.3))
-    } else if (this.buildingType == 3) {
-        this.corruption = Math.max(0, Math.min(255, this.corruption - 0.1))
-    } else if (this.buildingType == 4) {
-        this.corruption = Math.max(0, Math.min(255, this.corruption + 0.1))
-    } else if (this.buildingType == 5) {
-        this.corruption = Math.max(0, Math.min(255, this.corruption - 0.2))
-    } else if (this.buildingType == 6) {
-        this.corruption = Math.max(0, Math.min(255, this.corruption + 0.2))
+    switch (this.buildingType) {
+        case 0:
+        case 7:
+        case 8:
+            this.corruption = this.newCorruption
+            break
+        case 1:
+            this.corruption = Math.max(0, Math.min(255, this.corruption - 0.3))
+            break
+        case 2:
+            this.corruption = Math.max(0, Math.min(255, this.corruption + 0.3))
+            break
+        case 3:
+            this.corruption = Math.max(0, Math.min(255, this.corruption - 0.1))
+            break
+        case 4:
+            this.corruption = Math.max(0, Math.min(255, this.corruption + 0.1))
+            break
+        case 5:
+            this.corruption = Math.max(0, Math.min(255, this.corruption - 0.2))
+            break
+        case 6:
+            this.corruption = Math.max(0, Math.min(255, this.corruption + 0.2))
+            break
     }
 
     switch (this.buildingType) {
