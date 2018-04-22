@@ -74,6 +74,26 @@ Hex.prototype.setBuilding = function(type) {
             this.img.height = 70
             this.img.src = "assets/images/building_tower_ai.png"
             break;
+        case 5:
+            this.img.width = 60
+            this.img.height = 70
+            this.img.src = "assets/images/building_power_human.png"
+            break;
+        case 6:
+            this.img.width = 60
+            this.img.height = 70
+            this.img.src = "assets/images/building_power_ai.png"
+            break;
+        case 7:
+            this.img.width = 60
+            this.img.height = 70
+            this.img.src = "assets/images/building_thrower_human.png"
+            break;
+        case 8:
+            this.img.width = 60
+            this.img.height = 70
+            this.img.src = "assets/images/building_thrower_ai.png"
+            break;
     }
 
     if (this.buildingType == 0 && this.img) {
@@ -144,17 +164,25 @@ Hex.prototype.postUpdate = function() {
         this.corruption = Math.max(0, Math.min(255, this.corruption - 0.1))
     } else if (this.buildingType == 4) {
         this.corruption = Math.max(0, Math.min(255, this.corruption + 0.1))
+    } else if (this.buildingType == 5) {
+        this.corruption = Math.max(0, Math.min(255, this.corruption - 0.2))
+    } else if (this.buildingType == 6) {
+        this.corruption = Math.max(0, Math.min(255, this.corruption + 0.2))
     }
 
     switch (this.buildingType) {
         case 1:
         case 3:
+        case 5:
+        case 7:
             if (this.corruption > this.corruptionBreak1 + 10) {
                 this.setBuilding(0)
             }
             break
         case 2:
         case 4:
+        case 6:
+        case 8:
             if (this.corruption < this.corruptionBreak2 - 10) {
                 this.setBuilding(0)
             }
@@ -166,4 +194,28 @@ var Scene = function() {
     this.buildingCost = 0.8
     this.corruptionBreak1 = 80
     this.corruptionBreak2 = 174
+}
+
+Scene.prototype.getBuildingType = function(name) {
+    switch (name) {
+        case "human_start":
+            return 1
+        case "human_tower":
+            return 3
+        case "human_power":
+            return 5
+        case "human_thrower":
+            return 7
+        case "ai_start":
+            return 2
+        case "ai_tower":
+            return 4
+        case "ai_power":
+            return 6
+        case "ai_thrower":
+            return 8
+        default:
+        case "none":
+            return 0
+    }
 }

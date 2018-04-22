@@ -36,12 +36,25 @@ Player.prototype.update = function() {
 Player.prototype.humanUpate = function() {
     // check building placement
     if (game.input.keyWasPressed('space')) {
+        var index = this.k * 24 + this.i
         if (
-            game.hexes[this.k * 24 + this.i].corruption < game.scene.corruptionBreak1
+            game.hexes[index].corruption < game.scene.corruptionBreak1
             && this.sync >= game.scene.buildingCost
         ) {
-            this.sync -= game.scene.buildingCost
-            game.hexes[this.k * 24 + this.i].setBuilding(3)
+            switch (game.hexes[index].buildingType) {
+                case game.scene.getBuildingType("none"):
+                    this.sync -= game.scene.buildingCost
+                    game.hexes[index].setBuilding(game.scene.getBuildingType("human_tower"))
+                    break;
+                case game.scene.getBuildingType("human_tower"):
+                    this.sync -= game.scene.buildingCost
+                    game.hexes[index].setBuilding(game.scene.getBuildingType("human_power"))
+                    break;
+                case game.scene.getBuildingType("human_power"):
+                    this.sync -= game.scene.buildingCost
+                    game.hexes[index].setBuilding(game.scene.getBuildingType("human_thrower"))
+                    break;
+            }
         }
     }
 
