@@ -137,9 +137,9 @@ Hex.prototype.postUpdate = function() {
     if (this.buildingType == 0) {
         this.corruption = this.newCorruption
     } else if (this.buildingType == 1) {
-        this.corruption = 0
+        this.corruption = Math.max(0, Math.min(255, this.corruption - 0.3))
     } else if (this.buildingType == 2) {
-        this.corruption = 255
+        this.corruption = Math.max(0, Math.min(255, this.corruption + 0.3))
     } else if (this.buildingType == 3) {
         this.corruption = Math.max(0, Math.min(255, this.corruption - 0.1))
     } else if (this.buildingType == 4) {
