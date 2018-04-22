@@ -1,4 +1,4 @@
-Input = function() {
+var Input = function() {
     // w a s d space left right up down
     this.keyStatus = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 
