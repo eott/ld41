@@ -76,8 +76,10 @@ Player.prototype.humanUpdate = function() {
 
         if (game.beatProximity < game.beatSlack) {
             this.sync += 0.05
+            game.sfx.playSound("good")
         } else {
             this.sync -= 0.1
+            game.sfx.playSound("bad")
         }
         this.sync = Math.min(1.0, Math.max(0, this.sync))
     }

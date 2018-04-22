@@ -5,6 +5,8 @@ var SFX = function() {
 
 SFX.prototype.loadSounds = function() {
     this.nameAudioMap["baseLine"] = new Audio("assets/audio/base_line.wav");
+    this.nameAudioMap["good"] = new Audio("assets/audio/good.wav");
+    this.nameAudioMap["bad"] = new Audio("assets/audio/bad.wav");
 }
 
 SFX.prototype.playSound = function(name) {
