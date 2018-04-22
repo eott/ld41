@@ -2,6 +2,10 @@ var GameApp = function(can, ctx) {
     this.can = can
     this.ctx = ctx
     this.isInitialized = false
+    this.gameState = 0
+    this.humanWon = false
+    this.gui = new GUI()
+    this.input = new Input()
 }
 
 GameApp.prototype.centerOfHex = function(i, k) {
@@ -37,8 +41,6 @@ GameApp.prototype.init = function() {
 
     this.human = new Player(true, 0, 1)
     this.ai = new Player(false, 23, 14)
-    this.input = new Input()
-    this.gui = new GUI()
     this.sfx = new SFX()
     this.scene = new Scene()
 
@@ -70,11 +72,24 @@ GameApp.prototype.onBeat = function() {
 }
 
 GameApp.prototype.gameLoop = function() {
-    if (!this.isInitialized) {
-        this.init()
+    if (this.gameState == 0) {
+        this.gui.drawIntro(this.ctx)
+        if (this.input.keyWasPressed("space")) {
+            this.gameState = 1
+        }
+        return
+    }
+
+    if (this.gameState == 3) {
+        this.gui.drawEndScreen(this.ctx, this.humanWon)
+        return
     }
 
     this.ctx.clearRect(0, 0, can.width, can.height)
+
+    if (!this.isInitialized) {
+        this.init(this.ctx)
+    }
 
     var oldOverdue = this.beatOverdue
     this.beatOverdue = (new Date().getTime() - this.beatTimerStart) % this.beatMillis
@@ -114,6 +129,11 @@ GameApp.prototype.gameLoop = function() {
         }
     }
 
+    if (this.aiTiles.length == 0 || this.humanTiles.length == 0) {
+        this.gameState = 2
+        this.humanWon = this.aiTiles.length == 0
+    }
+
     this.human.draw(this.ctx)
     this.ai.draw(this.ctx)
 
@@ -127,6 +147,11 @@ GameApp.prototype.gameLoop = function() {
     this.projectiles = newList
 
     this.gui.draw(ctx)
+    if (this.gameState == 2) {
+        if (this.gui.drawFade(this.ctx)) {
+            this.gameState = 3
+        }
+    }
 }
 
 var can = document.getElementById("screen"); // The canvas element

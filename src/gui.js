@@ -1,5 +1,10 @@
 var GUI = function() {
-
+    this.splash = new Image()
+    this.splash.width = 1000
+    this.splash.height = 600
+    this.splash.src = "assets/images/splash.jpg"
+    this.introDrawn = false
+    this.firstFade = false
 }
 
 GUI.prototype.draw = function(ctx) {
@@ -56,4 +61,45 @@ GUI.prototype.draw = function(ctx) {
     ctx.moveTo(667 + 281 * game.balance, 537)
     ctx.lineTo(667 + 281 * game.balance, 587)
     ctx.stroke()
+}
+
+GUI.prototype.drawIntro = function(ctx) {
+    if (!this.introDrawn) {
+        ctx.drawImage(
+            this.splash,
+            0, 0,
+            this.splash.width,
+            this.splash.height
+        )
+        this.introDrawn = true
+    }
+}
+
+GUI.prototype.drawFade = function(ctx) {
+    if (!this.firstFade) {
+        this.firstFade = new Date().getTime()
+    }
+    var percent = (new Date().getTime() - this.firstFade) / 2000.0
+
+    if (percent >= 1.0) {
+        return true
+    }
+
+    ctx.fillStyle = "rgba(0,0,0," + percent + ")"
+    ctx.fillRect(0, 0, 1000, 600)
+
+    return false
+}
+
+GUI.prototype.drawEndScreen = function(ctx, humanWon) {
+    ctx.fillStyle = "#000000"
+    ctx.fillRect(0, 0, 1000, 600)
+
+    ctx.font = "70px Arial"
+    ctx.fillStyle = "#ffffff"
+    if (humanWon) {
+        ctx.fillText("You won!", 350, 300)
+    } else {
+        ctx.fillText("You lost!", 350, 300)
+    }
 }

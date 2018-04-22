@@ -53,6 +53,15 @@ Input.prototype.keyWasPressed = function(keyname) {
 }
 
 Input.prototype.registerListeners = function() {
-    window.addEventListener("keydown", function(e) {this.keyEvent(1, e.keyCode)}.bind(this), false)
-    window.addEventListener("keyup", function(e) {this.keyEvent(0, e.keyCode)}.bind(this), false)
+    window.addEventListener("keydown", function(e) {
+        this.keyEvent(1, e.keyCode)
+        if (e.keyCode == 32)
+            e.preventDefault()
+    }.bind(this), false)
+
+    window.addEventListener("keyup", function(e) {
+        this.keyEvent(0, e.keyCode)
+        if (e.keyCode == 32)
+            e.preventDefault()
+    }.bind(this), false)
 }
