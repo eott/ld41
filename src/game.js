@@ -10,10 +10,10 @@ var GameApp = function(can, ctx) {
 
 GameApp.prototype.centerOfHex = function(i, k) {
     if (i % 2 == 0) {
-        var x_offset = a + c
+        var x_offset = 20 + a + c
         var y_offset = b + c
     } else {
-        var x_offset = a + c
+        var x_offset = 20 + a + c
         var y_offset = 2 * b + c
     }
     // @TODO figure out why 1.3 is necessary and what's the precise number
