@@ -97,7 +97,6 @@ GameApp.prototype.gameLoop = function() {
     this.balance = this.balance / 384 / 255 // 384 = nr of hexes
 
     this.human.update()
-    this.human.sync = 1.0
     this.ai.update()
 
     for (idx in this.hexes) {
