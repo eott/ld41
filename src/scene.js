@@ -145,6 +145,21 @@ Hex.prototype.postUpdate = function() {
     } else if (this.buildingType == 4) {
         this.corruption = Math.max(0, Math.min(255, this.corruption + 0.1))
     }
+
+    switch (this.buildingType) {
+        case 1:
+        case 3:
+            if (this.corruption > this.corruptionBreak1 + 10) {
+                this.setBuilding(0)
+            }
+            break
+        case 2:
+        case 4:
+            if (this.corruption < this.corruptionBreak2 - 10) {
+                this.setBuilding(0)
+            }
+            break
+    }
 }
 
 var Scene = function() {
