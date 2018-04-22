@@ -26,6 +26,8 @@ var Hex = function(i, k, x, y) {
         this.buildingType = 0
     }
 
+    this.setBuilding(this.buildingType)
+
     this.neighbors = []
     if (i > 0) this.neighbors.push([i - 1, k])
     if (i < 23) this.neighbors.push([i + 1, k])
@@ -37,6 +39,45 @@ var Hex = function(i, k, x, y) {
     } else {
         if (k > 0 && i > 0) this.neighbors.push([i - 1, k - 1])
         if (k > 0 && i < 23) this.neighbors.push([i + 1, k - 1])
+    }
+}
+
+Hex.prototype.setBuilding = function(type) {
+    this.buildingType = type
+    switch (this.buildingType) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            this.img = new Image()
+            this.img.scale = 1.0
+            break;
+    }
+    switch (this.buildingType) {
+        case 1:
+            this.img.width = 60
+            this.img.height = 35
+            this.img.src = "assets/images/building_start_human.png"
+            break;
+        case 2:
+            this.img.width = 60
+            this.img.height = 35
+            this.img.src = "assets/images/building_start_ai.png"
+            break;
+        case 3:
+            this.img.width = 60
+            this.img.height = 70
+            this.img.src = "assets/images/building_tower_human.png"
+            break;
+        case 4:
+            this.img.width = 60
+            this.img.height = 70
+            this.img.src = "assets/images/building_tower_ai.png"
+            break;
+    }
+
+    if (this.buildingType == 0 && this.img) {
+        this.img = undefined
     }
 }
 
@@ -53,6 +94,16 @@ Hex.prototype.draw = function(ctx) {
     ctx.closePath()
     ctx.fill()
     ctx.stroke()
+
+    if (this.img) {
+        ctx.drawImage(
+            this.img,
+            this.x - 0.5 * this.img.width * this.img.scale,
+            this.y + b - this.img.height * this.img.scale,
+            this.img.width * this.img.scale,
+            this.img.height * this.img.scale
+        )
+    }
 }
 
 Hex.prototype.fillColor = function() {

@@ -41,7 +41,7 @@ Player.prototype.humanUpate = function() {
             && this.sync >= game.scene.buildingCost
         ) {
             this.sync -= game.scene.buildingCost
-            game.hexes[this.k * 24 + this.i].buildingType = 3
+            game.hexes[this.k * 24 + this.i].setBuilding(3)
         }
     }
 
