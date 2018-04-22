@@ -4,6 +4,8 @@ var Hex = function(i, k, x, y) {
     this.x = x
     this.y = y
 
+    this.faction = 0
+
     this.nodes = [
         [x + 0.5 * a + c, y],
         [x + c, y - b],
@@ -44,61 +46,82 @@ var Hex = function(i, k, x, y) {
 
 Hex.prototype.setBuilding = function(type) {
     this.buildingType = type
+
     switch (this.buildingType) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
+        case 1: case 2: case 3: case 4:
+        case 5: case 6: case 7: case 8:
             this.img = new Image()
             this.img.scale = 1.0
-            break;
+            break
     }
+
     switch (this.buildingType) {
         case 1:
             this.img.width = 60
             this.img.height = 35
             this.img.src = "assets/images/building_start_human.png"
-            break;
+            break
         case 2:
             this.img.width = 60
             this.img.height = 35
             this.img.src = "assets/images/building_start_ai.png"
-            break;
+            break
         case 3:
             this.img.width = 60
             this.img.height = 70
             this.img.src = "assets/images/building_tower_human.png"
-            break;
+            break
         case 4:
             this.img.width = 60
             this.img.height = 70
             this.img.src = "assets/images/building_tower_ai.png"
-            break;
+            break
         case 5:
             this.img.width = 60
             this.img.height = 70
             this.img.src = "assets/images/building_power_human.png"
-            break;
+            break
         case 6:
             this.img.width = 60
             this.img.height = 70
             this.img.src = "assets/images/building_power_ai.png"
-            break;
+            break
         case 7:
             this.img.width = 60
             this.img.height = 70
             this.img.src = "assets/images/building_thrower_human.png"
-            break;
+            break
         case 8:
             this.img.width = 60
             this.img.height = 70
             this.img.src = "assets/images/building_thrower_ai.png"
-            break;
+            break
     }
 
     if (this.buildingType == 0 && this.img) {
         this.img = undefined
     }
+}
+
+Hex.prototype.throwProjectile = function() {
+    var tile = undefined
+    if (this.faction == 1) {
+        tile = game.aiTiles[Math.round(Math.random() * game.aiTiles.length - 0.5)]
+    } else {
+        tile = game.humanTiles[Math.round(Math.random() * game.humanTiles.length - 0.5)]
+    }
+
+    if (!tile) {
+        return
+    }
+
+    game.projectiles.push(new Projectile(
+        this.faction == 1,
+        this.x,
+        this.y - this.img.height * 0.8,
+        tile.i,
+        tile.k
+    ))
 }
 
 Hex.prototype.draw = function(ctx) {
@@ -175,7 +198,7 @@ Hex.prototype.postUpdate = function() {
         case 3:
         case 5:
         case 7:
-            if (this.corruption > this.corruptionBreak1 + 10) {
+            if (this.corruption > game.scene.corruptionBreak1 + 10) {
                 this.setBuilding(0)
             }
             break
@@ -183,10 +206,18 @@ Hex.prototype.postUpdate = function() {
         case 4:
         case 6:
         case 8:
-            if (this.corruption < this.corruptionBreak2 - 10) {
+            if (this.corruption < game.scene.corruptionBreak2 - 10) {
                 this.setBuilding(0)
             }
             break
+    }
+
+    if (this.corruption < game.scene.corruptionBreak1) {
+        this.faction = 1
+    } else if (this.corruption > game.scene.corruptionBreak2) {
+        this.faction = 2
+    } else {
+        this.faction = 0
     }
 }
 

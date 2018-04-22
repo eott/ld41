@@ -42,6 +42,8 @@ GameApp.prototype.init = function() {
     this.sfx = new SFX()
     this.scene = new Scene()
 
+    this.projectiles = []
+
     this.isInitialized = true
 }
 
@@ -55,6 +57,15 @@ GameApp.prototype.onBeat = function() {
     // @TODO figure out way to avoid the sudden cutoff during reset for smoother loop
     if (this.beatCounter % 16 == 0) {
         this.sfx.resetSound("baseLine")
+    }
+
+    for (idx in this.hexes) {
+        if (
+            this.hexes[idx].buildingType == this.scene.getBuildingType("human_thrower")
+            || this.hexes[idx].buildingType == this.scene.getBuildingType("ai_thrower")
+        ) {
+            this.hexes[idx].throwProjectile()
+        }
     }
 }
 
@@ -86,6 +97,7 @@ GameApp.prototype.gameLoop = function() {
     this.balance = this.balance / 384 / 255 // 384 = nr of hexes
 
     this.human.update()
+    this.human.sync = 1.0
     this.ai.update()
 
     for (idx in this.hexes) {
@@ -93,10 +105,29 @@ GameApp.prototype.gameLoop = function() {
         this.hexes[idx].draw(this.ctx)
     }
 
-    this.gui.draw(ctx)
+    this.humanTiles = []
+    this.aiTiles = []
+    for (idx in this.hexes) {
+        if (this.hexes[idx].faction == 1) {
+            this.humanTiles.push(this.hexes[idx])
+        } else if (this.hexes[idx].faction == 2) {
+            this.aiTiles.push(this.hexes[idx])
+        }
+    }
 
     this.human.draw(this.ctx)
     this.ai.draw(this.ctx)
+
+    var newList = []
+    for (idx in this.projectiles) {
+        if (this.projectiles[idx].update()) {
+            newList.push(this.projectiles[idx])
+        }
+        this.projectiles[idx].draw(this.ctx)
+    }
+    this.projectiles = newList
+
+    this.gui.draw(ctx)
 }
 
 var can = document.getElementById("screen"); // The canvas element

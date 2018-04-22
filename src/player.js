@@ -84,3 +84,57 @@ Player.prototype.humanUpate = function() {
 Player.prototype.aiUpdate = function() {
 
 }
+
+var Projectile = function(humanPlayer, sx, sy, ti, tk) {
+    this.isHuman = humanPlayer
+
+    this.x = sx
+    this.y = sy
+    this.tx = game.centerOfHex(ti, tk)[0]
+    this.ty = game.centerOfHex(ti, tk)[1]
+    this.ti = ti
+    this.tk = tk
+
+    this.vx = this.tx - sx
+    this.vy = this.ty - sy
+    var l = Math.sqrt(this.vx * this.vx + this.vy * this.vy)
+    this.vx /= l
+    this.vy /= l
+    this.speed = 15.0
+    this.damage = 20
+
+    this.img = new Image()
+    this.img.scale = 1.0
+    this.img.width = 15
+    this.img.height = 15
+    this.img.src = humanPlayer
+        ? "assets/images/particle_thrower_human.png"
+        : "assets/images/particle_thrower_ai.png"
+}
+
+Projectile.prototype.update = function(ctx) {
+    this.x += this.vx * this.speed
+    this.y += this.vy * this.speed
+
+    if (
+        (this.tx - this.x) * (this.tx - this.x)
+        + (this.ty - this.y) * (this.ty - this.y)
+        < this.speed * this.speed
+    ) {
+        game.hexes[this.tk * 24 + this.ti].corruption +=
+            this.isHuman ? -this.damage : this.damage
+        return false
+    } else {
+        return this
+    }
+}
+
+Projectile.prototype.draw = function(ctx) {
+    ctx.drawImage(
+        this.img,
+        this.x - 0.5 * this.img.width * this.img.scale,
+        this.y - 0.5 * this.img.height * this.img.scale,
+        this.img.width * this.img.scale,
+        this.img.height * this.img.scale
+    )
+}
