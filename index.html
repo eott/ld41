@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8"/>
-        <title>tileswap</title>
-        <style type="text/css">
-            body {
-                margin: 0;
-                background-color: #003300;
-                overflow: hidden;
-            }
-            #screen {
-                margin: auto;
-                background-color: #000000;
-            }
-        </style>
+        <title>Forest Groove</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="default_style.css">
     </head>
 
     <body>
+        <div class="centerDiv">
+            <div id="header">
+                <div id="credits">
+                    <span id="title">Forest Groove</span>
+                    <span id="copyright">&copy; 2018 Etienne Ott</span>
+                </div>
+            </div>
 
-        <canvas id="screen" width="1000" height="600"></canvas>
+            <div id="gameView">
+                <canvas id="screen" width="1000" height="600"></canvas>
+            </div>
+
+            <div id="manual">
+                <h1>Manual</h1>
+                <h2>Goal</h2>
+                <p>
+                    bla bla
+                    <br><br>
+                    more bla
+                </p>
+            </div>
+
+            <div id="footer">
+                <p><strong>Credits:</strong></p>
+                <p>title by creater - <a href="http://url">Source</a> under licence</p>
+            </div>
+        </div>
+
         <script src="src/sfx.js" type="text/javascript"></script>
         <script src="src/gui.js" type="text/javascript"></script>
         <script src="src/input.js" type="text/javascript"></script>

@@ -1,0 +1,60 @@
+body {
+    background-color: #003300;
+    font-family: 'Consolas', sanserif;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+a {
+    color: #aaaaaa;
+}
+
+a:visited {
+    color: #777777;
+}
+
+div[class="centerDiv"] {
+    width: 1000px;
+    margin: auto;
+}
+
+img {
+    float: left;
+}
+
+div[id=gameView] {
+    cursor: pointer;
+    overflow: hidden;
+    width: 1000px;
+    height: 600px;
+    margin-top: 30px;
+    border: 1px solid #555555;
+    background-color: #000000;
+    z-index: 1;
+}
+
+div[id="header"] {
+    width: 100%;
+}
+
+div[id="footer"] {
+    width: 100%;
+    font-size: 18px;
+}
+
+span[id="title"] {
+    font-weight: 700;
+}
+
+div[id="muteButtons"] {
+    float: right;
+}
+
+img[id="mute"],
+img[id="unmute"] {
+    cursor: pointer;
+}
+
+img[id="unmute"] {
+    display: none;
+}
