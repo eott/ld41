@@ -40,6 +40,8 @@ GameApp.prototype.init = function() {
     this.sfx = new SFX()
     this.scene = new Scene()
 
+    this.sfx.playSound("music")
+
     this.projectiles = []
     this.highlightedTiles = []
 

@@ -7,6 +7,8 @@ SFX.prototype.loadSounds = function() {
     this.nameAudioMap["baseLine"] = new Audio("assets/audio/base_line.wav");
     this.nameAudioMap["good"] = new Audio("assets/audio/good.wav");
     this.nameAudioMap["bad"] = new Audio("assets/audio/bad.wav");
+    this.nameAudioMap["music"] = new Audio("assets/audio/music.ogg");
+    this.nameAudioMap["music"].looping = true
 }
 
 SFX.prototype.playSound = function(name) {
