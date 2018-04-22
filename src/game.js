@@ -2,10 +2,6 @@ var GameApp = function(can, ctx) {
     this.can = can
     this.ctx = ctx
     this.isInitialized = false
-    this.hexes = []
-    this.human = new Player(true, 0, 1)
-    this.ai = new Player(false, 23, 14)
-    this.balance = 0
 }
 
 GameApp.prototype.centerOfHex = function(i, k) {
@@ -21,6 +17,17 @@ GameApp.prototype.centerOfHex = function(i, k) {
 }
 
 GameApp.prototype.init = function() {
+    this.beatTimerStart = (new Date()).getTime()
+    this.beatOverdue = 1000
+    this.beatCounter = 0
+    this.beatProximity = 0
+    this.beatsPerMinute = 80
+    this.beatMillis = 60000 / this.beatsPerMinute
+    this.beatSlack = 100
+
+    this.balance = 0
+
+    this.hexes = []
     for (var k = 0; k < 16; k++) {
         for (var i = 0; i < 24; i++) {
             var coords = this.centerOfHex(i, k)
@@ -28,30 +35,43 @@ GameApp.prototype.init = function() {
         }
     }
 
+    this.human = new Player(true, 0, 1)
+    this.ai = new Player(false, 23, 14)
     this.input = new Input()
     this.gui = new GUI()
+    this.sfx = new SFX()
 
-    this.beatTimerStart = (new Date()).getTime()
-    this.beatOverdue = 0
-    this.beatProximity = 0
-    this.beatsPerMinute = 80
-    this.beatMillis = 60000 / this.beatsPerMinute
-    this.beatSlack = 100
-
-    this.balance = 0
     this.isInitialized = true
 }
 
+GameApp.prototype.onBeat = function() {
+    this.beatCounter += 1
+
+    if (this.beatCounter == 1) {
+        this.sfx.playSound("baseLine")
+    }
+    // @TODO make dependednt on length of baseline sound file instead of harcoding
+    // @TODO figure out way to avoid the sudden cutoff during reset for smoother loop
+    if (this.beatCounter % 16 == 0) {
+        this.sfx.resetSound("baseLine")
+    }
+}
+
 GameApp.prototype.gameLoop = function() {
+    if (!this.isInitialized) {
+        this.init()
+    }
+
     this.ctx.clearRect(0, 0, can.width, can.height)
 
+    var oldOverdue = this.beatOverdue
     this.beatOverdue = (new Date().getTime() - this.beatTimerStart) % this.beatMillis
     this.beatProximity = this.beatOverdue < this.beatMillis * 0.5
         ? this.beatOverdue
         : this.beatMillis - this.beatOverdue
 
-    if (!this.isInitialized) {
-        this.init()
+    if (oldOverdue > this.beatOverdue) {
+        this.onBeat()
     }
 
     for (idx in this.hexes) {
