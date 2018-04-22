@@ -12,6 +12,8 @@ var Player = function(humanPlayer, i, k) {
         : "assets/images/player_ai.png"
 
     this.sync = 0.25
+
+    this.lastBeat = 0
 }
 
 Player.prototype.draw = function(ctx) {
@@ -27,13 +29,13 @@ Player.prototype.draw = function(ctx) {
 
 Player.prototype.update = function() {
     if (this.isHuman) {
-        this.humanUpate()
+        this.humanUpdate()
     } else {
         this.aiUpdate()
     }
 }
 
-Player.prototype.humanUpate = function() {
+Player.prototype.humanUpdate = function() {
     // check building placement
     if (game.input.keyWasPressed('space')) {
         var index = this.k * 24 + this.i
@@ -81,8 +83,58 @@ Player.prototype.humanUpate = function() {
     }
 }
 
-Player.prototype.aiUpdate = function() {
+Player.prototype.shuffle = function(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
 
+Player.prototype.aiUpdate = function() {
+    // the ai only has to do stuff once per beat
+    if (game.beatCounter > this.lastBeat) {
+        this.lastBeat = game.beatCounter
+    } else {
+        return
+    }
+
+    // if current tile is upgradeable, try to do so
+    tile = game.hexes[this.k * 24 + this.i]
+    if (this.sync >= game.scene.buildingCost && tile.faction == 2) {
+        this.sync -= game.scene.buildingCost
+        if (tile.buildingType == game.scene.getBuildingType("none")) {
+            tile.setBuilding(game.scene.getBuildingType("ai_tower"))
+        } else if (tile.buildingType == game.scene.getBuildingType("ai_tower")) {
+            tile.setBuilding(game.scene.getBuildingType("ai_power"))
+        } else if (tile.buildingType == game.scene.getBuildingType("ai_power")) {
+            tile.setBuilding(game.scene.getBuildingType("ai_thrower"))
+        }
+    }
+
+    // move around randomly in own territory
+    var target = undefined
+    var tile = game.hexes[this.k * 24 + this.i]
+    var copy = tile.neighbors.slice()
+    this.shuffle(copy)
+    for (idx in copy) {
+        tile = game.hexes[copy[idx][1] * 24 + copy[idx][0]]
+        if (tile.faction == 2) {
+            target = game.hexes[copy[idx][1] * 24 + copy[idx][0]]
+        }
+    }
+
+    // go towards target or to lower right corner
+    if (target) {
+        this.sync += 0.05
+        this.i = target.i
+        this.k = target.k
+    } else {
+        this.sync += 0.05
+        this.i = Math.max(0, Math.min(23, this.i + 1))
+        this.k = Math.max(0, Math.min(15, this.k + 1))
+    }
 }
 
 var Projectile = function(humanPlayer, sx, sy, ti, tk) {
