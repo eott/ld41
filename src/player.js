@@ -80,6 +80,7 @@ Player.prototype.humanUpdate = function() {
         } else {
             this.sync -= 0.1
             game.sfx.playSound("bad")
+            game.gui.doScreenShake()
         }
         this.sync = Math.min(1.0, Math.max(0, this.sync))
     }

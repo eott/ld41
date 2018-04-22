@@ -5,6 +5,20 @@ var GUI = function() {
     this.splash.src = "assets/images/splash.jpg"
     this.introDrawn = false
     this.firstFade = false
+    this.isDoingScreenShake = false
+    this.screenShakeCounter = 0
+}
+
+GUI.prototype.update = function() {
+    if (this.screenShakeCounter == 4) {
+        this.isDoingScreenShake = false
+        game.ctx.restore()
+    }
+
+    if (this.isDoingScreenShake) {
+        this.screenShakeCounter += 1
+        game.ctx.translate(5 * Math.sin(-Math.PI + 2 * Math.PI * this.screenShakeCounter / 4), 0)
+    }
 }
 
 GUI.prototype.draw = function(ctx) {
@@ -61,6 +75,14 @@ GUI.prototype.draw = function(ctx) {
     ctx.moveTo(667 + 281 * game.balance, 537)
     ctx.lineTo(667 + 281 * game.balance, 587)
     ctx.stroke()
+}
+
+GUI.prototype.doScreenShake = function() {
+    if (!this.isDoingScreenShake) {
+        this.isDoingScreenShake = true
+        this.screenShakeCounter = 0
+        game.ctx.save()
+    }
 }
 
 GUI.prototype.drawIntro = function(ctx) {

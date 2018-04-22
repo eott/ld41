@@ -9,13 +9,9 @@ var GameApp = function(can, ctx) {
 }
 
 GameApp.prototype.centerOfHex = function(i, k) {
-    if (i % 2 == 0) {
-        var x_offset = 20 + a + c
-        var y_offset = b + c
-    } else {
-        var x_offset = 20 + a + c
-        var y_offset = 2 * b + c
-    }
+    var x_offset = 20 + a + c
+    var y_offset = i % 2 == 0 ? b + c : 2 * b + c
+
     // @TODO figure out why 1.3 is necessary and what's the precise number
     return [x_offset + i * (a + 1.3 * c), y_offset + k * 2 * b]
 }
@@ -100,6 +96,8 @@ GameApp.prototype.gameLoop = function() {
     if (oldOverdue > this.beatOverdue) {
         this.onBeat()
     }
+
+    this.gui.update()
 
     for (idx in this.hexes) {
         this.hexes[idx].preUpdate()
