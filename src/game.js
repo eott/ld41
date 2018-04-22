@@ -21,7 +21,7 @@ GameApp.prototype.init = function() {
     this.beatOverdue = 1000
     this.beatCounter = 0
     this.beatProximity = 0
-    this.beatsPerMinute = 80
+    this.beatsPerMinute = 100
     this.beatMillis = 60000 / this.beatsPerMinute
     this.beatSlack = 100
 
