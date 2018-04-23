@@ -5,8 +5,6 @@ var Hex = function(i, k, x, y) {
     this.y = y
     this.yOffset = 0
 
-    this.faction = 0
-
     this.nodes = [
         [x + 0.5 * a + c, y],
         [x + c, y - b],
@@ -21,12 +19,15 @@ var Hex = function(i, k, x, y) {
     if ((i == 0 && k <= 1) || (i == 1 && k == 0)) {
         this.corruption = 0
         this.buildingType = 1
+        this.faction = 1
     } else if ((i == 22 && k == 15) || (i == 23 && k >= 14)) {
         this.corruption = 255
         this.buildingType = 2
+        this.faction = 2
     } else {
         this.corruption = 127
         this.buildingType = 0
+        this.faction = 0
     }
 
     this.setBuilding(this.buildingType)
@@ -51,12 +52,18 @@ Hex.prototype.setBuilding = function(type) {
     switch (this.buildingType) {
         case 1: case 2: case 3: case 4:
         case 5: case 6: case 7: case 8:
+        case 0:
             this.img = new Image()
             this.img.scale = 1.0
             break
     }
 
     switch (this.buildingType) {
+        case 0:
+            this.img.width = 60
+            this.img.height = 35
+            this.img.src = this.getImageForFactionEmptyTile(this.faction)
+            break
         case 1:
             this.img.width = 60
             this.img.height = 35
@@ -98,9 +105,17 @@ Hex.prototype.setBuilding = function(type) {
             this.img.src = "assets/images/building_thrower_ai.png"
             break
     }
+}
 
-    if (this.buildingType == 0 && this.img) {
-        this.img = undefined
+Hex.prototype.getImageForFactionEmptyTile = function(faction) {
+    var r = Math.round(Math.random() * 3 + 0.5).toFixed(0)
+    switch (faction) {
+        case 0:
+            return "assets/images/deco_neutral_" + r + ".png"
+        case 1:
+            return "assets/images/deco_human_" + r + ".png"
+        case 2:
+            return "assets/images/deco_ai_" + r + ".png"
     }
 }
 
@@ -227,13 +242,19 @@ Hex.prototype.postUpdate = function() {
             break
     }
 
+    var newFaction = 0
     if (this.corruption < game.scene.corruptionBreak1) {
-        this.faction = 1
+        newFaction = 1
     } else if (this.corruption > game.scene.corruptionBreak2) {
-        this.faction = 2
+        newFaction = 2
     } else {
-        this.faction = 0
+        newFaction = 0
     }
+
+    if (this.faction != newFaction) {
+        this.img.src = this.getImageForFactionEmptyTile(newFaction)
+    }
+    this.faction = newFaction
 }
 
 var Scene = function() {
