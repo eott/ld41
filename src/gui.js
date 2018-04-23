@@ -3,7 +3,6 @@ var GUI = function() {
     this.splash.width = 1000
     this.splash.height = 600
     this.splash.src = "assets/images/splash.jpg"
-    this.introDrawn = false
     this.firstFade = false
     this.isDoingScreenShake = false
     this.screenShakeCounter = 0
@@ -91,15 +90,12 @@ GUI.prototype.doScreenShake = function() {
 }
 
 GUI.prototype.drawIntro = function(ctx) {
-    if (!this.introDrawn) {
-        ctx.drawImage(
-            this.splash,
-            0, 0,
-            this.splash.width,
-            this.splash.height
-        )
-        this.introDrawn = true
-    }
+    ctx.drawImage(
+        this.splash,
+        0, 0,
+        this.splash.width,
+        this.splash.height
+    )
 }
 
 GUI.prototype.drawFade = function(ctx) {
