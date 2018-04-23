@@ -23,6 +23,11 @@ GUI.prototype.update = function() {
 
 GUI.prototype.draw = function(ctx) {
     var fac = 1.0 - game.beatProximity * 2 / game.beatMillis
+
+    // make background in canvas flash (but not too strongly, epilepsy and such)
+    var greyVal = fac * 25
+    game.can.style["background-color"] = "rgba(" + greyVal + ", " + greyVal + ", " + greyVal + ", 1.0)"
+
     // eighth power gives us a nice pulse
     fac = fac * fac
     fac = fac * fac
